@@ -1,0 +1,118 @@
+<html lang="en">
+
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content=
+	"width=device-width, initial-scale=1.0" />
+
+<!-- font-awesome library to make the
+	webpage more appealing -->
+<link rel="stylesheet" href=
+"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+<!-- Internal CSS styling -->
+<style>
+	.content {
+	text-align: center;
+	padding: 30px;
+	margin: 0px auto;
+	}
+
+	.details {
+	margin-left: auto;
+	margin-right: auto;
+	}
+
+	img {
+	border-radius: 5px;
+	box-shadow: black;
+	}
+
+	table,
+	td {
+	border-collapse: collapse;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	padding: 10px;
+	border: 1px solid black;
+	}
+</style>
+</head>
+
+<body>
+<div class="content">
+	<div class="head">
+	<h1 id="head"></h1>
+	</div>
+	<br />
+	<div id="map-img"></div>
+	<br />
+
+	<div class="details">
+	<table>
+	<tr>
+	<td>Map</td>
+	<td><span id="map"></span></td>
+	</tr><tr>
+	<td>Time Remaining</td>
+	<td><span id="timeRemaining"></span></td>
+	</tr><tr>
+	<td>Next Map</td>
+	<td><span id="nextmap"></span></td>
+	</tr><tr>
+	<td>Time Duration</td>
+	<td><span id="timeDuration"></span></td>
+	</tr><tr>
+	<td>Starts At</td>
+	<td><span id="startAt"></span></td>
+	</tr>
+	</table>
+	</div>
+</div>
+</body>
+<script>
+const apiKey = 'bd1c7754604c7e2f6d97cefe7d68a705';
+const api_url = `https://api.mozambiquehe.re/maprotation?auth=${apiKey}`;
+
+async function getUser() {
+
+	// Making an API call (request)
+	// and getting the response back
+	const response = await fetch(api_url);
+
+	// Parsing it to JSON format
+	const data = await response.json();
+	console.log(data);
+
+	// Retrieving data from JSON
+	// const user = data.results[0];
+	let currentMap = data.current.map;
+	let timeRemaining = parseInt(data.current.remainingSecs/60);
+	let image = data.current.asset;
+
+	let nextMap = data.next.map;
+	let startAt = data.next.readableDate_start;
+	let timeDuration = data.next.DurationInSecs/60;
+
+	document.title = currentMap;
+	document.querySelector("#map").textContent = currentMap;
+	document.querySelector("#timeRemaining").textContent = timeRemaining
+
+	document.querySelector("#nextmap").textContent = nextMap;
+	document.querySelector("#startAt").textContent = startAt;
+	document.querySelector("#timeDuration").textContent = timeDuration;
+
+	let img = document.createElement("img");
+	let img_div = document.getElementById("map-img");
+	img.src = image;
+	img.height = '500';
+	img.width = '1000';	
+	img_div.append(img);
+}
+
+// Calling the function
+getUser();
+</script>
+
+</html>
